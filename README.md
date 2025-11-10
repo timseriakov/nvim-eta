@@ -1,28 +1,28 @@
 # nvim-eta
 
-Полноценная поддержка шаблонов [Eta](https://eta.js.org/) в Neovim с подсветкой синтаксиса, Treesitter, LSP и автозакрытием тегов.
+Comprehensive [Eta](https://eta.js.org/) template support for Neovim with syntax highlighting, Treesitter, LSP, and auto-closing tags.
 
-## Возможности
+## Features
 
-- ✅ **Автоматическое определение filetype** (`html.eta`) для `.eta` файлов
-- ✅ **Подсветка синтаксиса** для HTML и JavaScript внутри тегов Eta (`<% %>`, `<%= %>`)
-- ✅ **Treesitter интеграция** с language injections для JavaScript и HTML
-- ✅ **LSP поддержка**:
+- ✅ **Automatic filetype detection** (`html.eta`) for `.eta` files
+- ✅ **Syntax highlighting** for HTML and JavaScript inside Eta tags (`<% %>`, `<%= %>`)
+- ✅ **Treesitter integration** with language injections for JavaScript and HTML
+- ✅ **LSP support**:
   - HTML Language Server
   - TailwindCSS IntelliSense
   - Emmet
-- ✅ **Автозакрытие тегов** через `nvim-ts-autotag`
-- ✅ **Простая настройка** через `lazy.nvim`
+- ✅ **Auto-closing tags** via `nvim-ts-autotag`
+- ✅ **Easy setup** with `lazy.nvim`
 
-## Установка
+## Installation
 
-### Требования
+### Requirements
 
 - Neovim >= 0.9.0
-- [lazy.nvim](https://github.com/folke/lazy.nvim) (рекомендуется)
-- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) (опционально)
-- [nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) (опционально)
-- LSP серверы (опционально):
+- [lazy.nvim](https://github.com/folke/lazy.nvim) (recommended)
+- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) (optional)
+- [nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) (optional)
+- LSP servers (optional):
   - `vscode-html-language-server` (HTML)
   - `tailwindcss-language-server` (TailwindCSS)
   - `emmet-ls` (Emmet)
@@ -32,15 +32,15 @@
 ```lua
 -- ~/.config/nvim/lua/plugins/eta.lua
 return {
-  "yourusername/nvim-eta",
-  ft = "eta",  -- Ленивая загрузка только для .eta файлов
+  "timseriakov/nvim-eta",
+  ft = "eta",  -- Lazy load only for .eta files
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
     "windwp/nvim-ts-autotag",
   },
   config = function()
     require("nvim-eta").setup({
-      -- Опции по умолчанию (можно не указывать)
+      -- Default options (can be omitted)
       treesitter = true,
       lsp = {
         html = true,
@@ -53,43 +53,43 @@ return {
 }
 ```
 
-### Ручная установка
+### Manual Installation
 
 ```bash
-git clone https://github.com/yourusername/nvim-eta ~/.local/share/nvim/site/pack/plugins/start/nvim-eta
+git clone https://github.com/timseriakov/nvim-eta ~/.local/share/nvim/site/pack/plugins/start/nvim-eta
 ```
 
-Добавьте в `init.lua`:
+Add to `init.lua`:
 
 ```lua
 require("nvim-eta").setup()
 ```
 
-## Конфигурация
+## Configuration
 
-### Опции по умолчанию
+### Default Options
 
 ```lua
 require("nvim-eta").setup({
-  -- Включить Treesitter интеграцию
+  -- Enable Treesitter integration
   treesitter = true,
   
-  -- LSP настройки
+  -- LSP settings
   lsp = {
     html = true,         -- HTML Language Server
     tailwindcss = true,  -- TailwindCSS IntelliSense
     emmet = true,        -- Emmet abbreviations
   },
   
-  -- Автозакрытие тегов
+  -- Auto-closing tags
   autotag = true,
 })
 ```
 
-### Отключение отдельных функций
+### Disable Specific Features
 
 ```lua
--- Только подсветка синтаксиса, без LSP и Treesitter
+-- Only syntax highlighting, no LSP or Treesitter
 require("nvim-eta").setup({
   treesitter = false,
   lsp = {
@@ -101,21 +101,21 @@ require("nvim-eta").setup({
 })
 ```
 
-### Кастомная конфигурация для LazyVim
+### Custom Configuration for LazyVim
 
-Если используете [LazyVim](https://github.com/LazyVim/LazyVim), создайте файл:
+If using [LazyVim](https://github.com/LazyVim/LazyVim), create a file:
 
 ```lua
 -- ~/.config/nvim/lua/plugins/eta.lua
 return {
-  "yourusername/nvim-eta",
+  "timseriakov/nvim-eta",
   ft = "eta",
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
     "windwp/nvim-ts-autotag",
   },
   opts = {
-    -- LazyVim использует opts вместо config
+    -- LazyVim uses opts instead of config
     treesitter = true,
     lsp = {
       html = true,
@@ -127,27 +127,27 @@ return {
 }
 ```
 
-## Синтаксис Eta
+## Eta Syntax
 
-Плагин поддерживает все типы тегов Eta:
+The plugin supports all Eta tag types:
 
 ```html
-<!-- Выполнение кода -->
+<!-- Code execution -->
 <% const name = "World"; %>
 
-<!-- Вывод с экранированием -->
+<!-- Escaped output -->
 <p>Hello, <%= name %>!</p>
 
-<!-- Вывод без экранирования -->
+<!-- Raw output (unescaped) -->
 <div><%~ rawHTML %></div>
 
-<!-- Комментарии -->
-<%# Это комментарий, не попадёт в вывод %>
+<!-- Comments -->
+<%# This is a comment, won't appear in output %>
 
-<!-- Сырой вывод -->
+<!-- Raw output without trimming -->
 <%_ "Raw output without trimming" %>
 
-<!-- Условия и циклы -->
+<!-- Conditionals and loops -->
 <% if (user.isAdmin) { %>
   <button>Admin Panel</button>
 <% } %>
@@ -157,35 +157,35 @@ return {
 <% }) %>
 ```
 
-## Особенности
+## Features
 
 ### Treesitter
 
-Плагин использует HTML Treesitter parser с language injection для JavaScript блоков. Это обеспечивает:
+The plugin uses HTML Treesitter parser with language injection for JavaScript blocks. This provides:
 
-- Точную подсветку синтаксиса
-- Навигацию по коду (gd, gD)
-- Refactoring с помощью Treesitter
+- Accurate syntax highlighting
+- Code navigation (gd, gD)
+- Refactoring with Treesitter
 
 ### LSP
 
-Автоматически подключает LSP серверы для `.eta` файлов:
+Automatically attaches LSP servers for `.eta` files:
 
-- **HTML LS**: автодополнение HTML тегов, валидация
-- **TailwindCSS**: IntelliSense для Tailwind классов
-- **Emmet**: сокращения (например, `div.container>ul>li*3`)
+- **HTML LS**: HTML tag autocompletion, validation
+- **TailwindCSS**: IntelliSense for Tailwind classes
+- **Emmet**: abbreviations (e.g., `div.container>ul>li*3`)
 
 ### Autotag
 
-Интеграция с `nvim-ts-autotag`:
+Integration with `nvim-ts-autotag`:
 
-- Автозакрытие при вводе `<div>` → `<div>|</div>`
-- Синхронное переименование открывающих/закрывающих тегов
-- Автозакрытие при вводе `/`
+- Auto-close when typing `<div>` → `<div>|</div>`
+- Synchronous renaming of opening/closing tags
+- Auto-close when typing `/`
 
-## Установка LSP серверов
+## Installing LSP Servers
 
-### Mason (рекомендуется)
+### Mason (recommended)
 
 ```lua
 -- ~/.config/nvim/lua/plugins/mason.lua
@@ -209,9 +209,9 @@ npm install -g @tailwindcss/language-server  # TailwindCSS
 npm install -g emmet-ls                      # Emmet
 ```
 
-## Совместимость
+## Compatibility
 
-Плагин протестирован с:
+Tested with:
 
 - Neovim 0.9.0+
 - LazyVim
@@ -221,44 +221,44 @@ npm install -g emmet-ls                      # Emmet
 
 ## Troubleshooting
 
-### Не работает подсветка синтаксиса
+### Syntax highlighting not working
 
-1. Проверьте, что filetype установлен: `:set filetype?` → должно быть `html.eta`
-2. Убедитесь, что плагин загружен: `:lua print(vim.g.loaded_nvim_eta)` → должно быть `1`
+1. Check filetype is set: `:set filetype?` → should be `html.eta`
+2. Verify plugin loaded: `:lua print(vim.g.loaded_nvim_eta)` → should be `1`
 
-### LSP не запускается
+### LSP not starting
 
-1. Проверьте наличие LSP серверов: `which vscode-html-language-server`
-2. Проверьте логи LSP: `:LspLog`
-3. Проверьте, что LSP включен в конфигурации плагина
+1. Check LSP servers installed: `which vscode-html-language-server`
+2. Check LSP logs: `:LspLog`
+3. Verify LSP enabled in plugin configuration
 
-### Treesitter не работает
+### Treesitter not working
 
-1. Установите HTML parser: `:TSInstall html`
-2. Убедитесь, что язык зарегистрирован: `:lua print(vim.treesitter.language.get_lang("eta"))` → `html`
+1. Install HTML parser: `:TSInstall html`
+2. Verify language registered: `:lua print(vim.treesitter.language.get_lang("eta"))` → `html`
 
-## Разработка
+## Development
 
 ```bash
-# Клонировать репозиторий
-git clone https://github.com/yourusername/nvim-eta
+# Clone repository
+git clone https://github.com/timseriakov/nvim-eta
 cd nvim-eta
 
-# Запустить Neovim с локальной версией
+# Run Neovim with local version
 nvim --cmd "set rtp+=."
 ```
 
-## Лицензия
+## License
 
 MIT
 
-## Авторы
+## Authors
 
-Создано для упрощения работы с Eta шаблонами в Neovim.
+Created to simplify working with Eta templates in Neovim.
 
-## Благодарности
+## Acknowledgments
 
-- [Eta.js](https://eta.js.org/) - быстрый шаблонизатор
-- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - парсинг синтаксиса
-- [nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) - автозакрытие тегов
+- [Eta.js](https://eta.js.org/) - fast template engine
+- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - syntax parsing
+- [nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) - auto-closing tags
 
