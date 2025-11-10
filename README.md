@@ -209,6 +209,57 @@ npm install -g @tailwindcss/language-server  # TailwindCSS
 npm install -g emmet-ls                      # Emmet
 ```
 
+## TailwindCSS Configuration
+
+For TailwindCSS IntelliSense to work properly with `.eta` files, you need to configure your `tailwind.config.js` to include `.eta` files in the content paths.
+
+### Example tailwind.config.js
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  // IMPORTANT: Include .eta files in content paths
+  content: [
+    "./src/**/*.{html,js,ts,jsx,tsx,eta}",
+    "./views/**/*.eta",
+    "./templates/**/*.eta",
+    "**/*.eta",  // Include all .eta files
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+### TypeScript config
+
+```typescript
+import type { Config } from 'tailwindcss'
+
+export default {
+  content: [
+    "./src/**/*.{html,js,ts,jsx,tsx,eta}",
+    "./views/**/*.eta",
+    "./templates/**/*.eta",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+} satisfies Config
+```
+
+### Verify TailwindCSS is working
+
+1. Make sure `tailwind.config.js` exists in your project root
+2. Include `.eta` files in the `content` array
+3. Open an `.eta` file in Neovim
+4. Check LSP status: `:LspInfo` - should show `tailwindcss` attached
+5. Try typing a class: `<div class="bg-` → IntelliSense should appear with custom colors/classes
+
+**Note**: If you have custom theme configuration (colors, spacing, etc.), TailwindCSS LSP will now suggest those custom values along with the default ones.
+
 ## Compatibility
 
 Tested with:
@@ -231,6 +282,28 @@ Tested with:
 1. Check LSP servers installed: `which vscode-html-language-server`
 2. Check LSP logs: `:LspLog`
 3. Verify LSP enabled in plugin configuration
+
+### TailwindCSS IntelliSense not working
+
+1. **Check config file exists**: `ls tailwind.config.js` or `ls tailwind.config.ts`
+2. **Add .eta to content paths**:
+   ```javascript
+   content: ["**/*.eta", "./views/**/*.eta"]
+   ```
+3. **Verify LSP attached**: `:LspInfo` → should show `tailwindcss` in attached clients
+4. **Check root directory**: LSP looks for config in project root. If config is nested, move it to root.
+5. **Restart LSP**: `:LspRestart`
+6. **Check logs**: `:LspLog` for TailwindCSS errors
+
+### TailwindCSS shows only basic classes (not reading config)
+
+This usually means the config file isn't being detected or parsed correctly:
+
+1. **Ensure config is in project root** (same directory as `.git/`)
+2. **Check config syntax** - make sure it's valid JavaScript/TypeScript
+3. **Include .eta in content paths** - see [TailwindCSS Configuration](#tailwindcss-configuration)
+4. **Restart Neovim** after changing config
+5. **Check LSP settings**: `:lua vim.print(vim.lsp.get_active_clients()[1].config.settings)` (replace `[1]` with TailwindCSS client index from `:LspInfo`)
 
 ### Treesitter not working
 

@@ -83,17 +83,48 @@ function M.setup_lsp()
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "html.eta",
       callback = function()
-        local root_pattern = require("lspconfig.util").root_pattern("tailwind.config.js", "tailwind.config.ts")
+        local root_pattern = require("lspconfig.util").root_pattern(
+          "tailwind.config.js",
+          "tailwind.config.ts",
+          "tailwind.config.mjs",
+          "tailwind.config.cjs",
+          "postcss.config.js"
+        )
         local root_dir = root_pattern(vim.api.nvim_buf_get_name(0))
         if root_dir then
           vim.lsp.start({
             name = "tailwindcss",
             cmd = { "tailwindcss-language-server", "--stdio" },
             root_dir = root_dir,
+            filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "eta", "html.eta" },
+            init_options = {
+              userLanguages = {
+                eta = "html",
+              },
+            },
             settings = {
               tailwindCSS = {
                 includeLanguages = {
                   eta = "html",
+                  ["html.eta"] = "html",
+                },
+                classAttributes = { "class", "className", "classList", "ngClass" },
+                lint = {
+                  cssConflict = "warning",
+                  invalidApply = "error",
+                  invalidConfigPath = "error",
+                  invalidScreen = "error",
+                  invalidTailwindDirective = "error",
+                  invalidVariant = "error",
+                  recommendedVariantOrder = "warning",
+                },
+                validate = true,
+                experimental = {
+                  classRegex = {
+                    { "class[:]\\s*['\"]([^'\"]*)['\"]", "['\"]([^'\"]*)['\"]" },
+                    { "class[:]\\s*{([^}]*)}", "['\"]([^'\"]*)['\"]" },
+                    { "className[:]\\s*['\"]([^'\"]*)['\"]", "['\"]([^'\"]*)['\"]" },
+                  },
                 },
               },
             },
