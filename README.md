@@ -211,9 +211,46 @@ npm install -g emmet-ls                      # Emmet
 
 ## TailwindCSS Configuration
 
-For TailwindCSS IntelliSense to work properly with `.eta` files, you need to configure your `tailwind.config.js` to include `.eta` files in the content paths.
+### Tailwind v4 (Recommended)
 
-### Example tailwind.config.js
+**Good news!** Tailwind v4 works **out of the box** with `.eta` files - no configuration needed! 🎉
+
+TailwindCSS v4 uses CSS-based configuration (`@theme` directive) instead of `tailwind.config.js`:
+
+```css
+/* app.css or styles.css */
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3b82f6;
+  --color-secondary: #8b5cf6;
+  --spacing-huge: 10rem;
+}
+
+@utility card {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+```
+
+The LSP **automatically parses your CSS file** and provides IntelliSense for:
+- ✅ Custom theme variables (`bg-primary`, `text-secondary`)
+- ✅ Custom utilities (`card`)
+- ✅ All default Tailwind classes
+
+**No tailwind.config.js needed!** Just ensure `tailwindcss` is in your `package.json` dependencies.
+
+📖 **See [TAILWIND_V4.md](TAILWIND_V4.md) for detailed v4 documentation**
+
+---
+
+### Tailwind v3 (Legacy)
+
+If you're still using Tailwind v3, you need to configure `tailwind.config.js` to include `.eta` files:
+
+#### Example tailwind.config.js
 
 ```javascript
 /** @type {import('tailwindcss').Config} */
@@ -250,15 +287,23 @@ export default {
 } satisfies Config
 ```
 
+---
+
 ### Verify TailwindCSS is working
 
-1. Make sure `tailwind.config.js` exists in your project root
-2. Include `.eta` files in the `content` array
-3. Open an `.eta` file in Neovim
-4. Check LSP status: `:LspInfo` - should show `tailwindcss` attached
-5. Try typing a class: `<div class="bg-` → IntelliSense should appear with custom colors/classes
+**For both v3 and v4:**
 
-**Note**: If you have custom theme configuration (colors, spacing, etc.), TailwindCSS LSP will now suggest those custom values along with the default ones.
+1. Open an `.eta` file in Neovim
+2. Check LSP status: `:LspInfo` - should show `tailwindcss` attached
+3. Try typing a class: `<div class="bg-` → IntelliSense should appear
+
+**Version-specific checks:**
+
+**v4:** Custom theme variables appear automatically (e.g., `bg-primary` from `--color-primary`)
+
+**v3:** Verify `tailwind.config.js` exists and includes `.eta` in `content` array
+
+**Note**: IntelliSense includes your custom colors, spacing, and utilities along with default Tailwind classes.
 
 ## Compatibility
 

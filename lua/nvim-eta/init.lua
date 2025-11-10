@@ -88,7 +88,8 @@ function M.setup_lsp()
           "tailwind.config.ts",
           "tailwind.config.mjs",
           "tailwind.config.cjs",
-          "postcss.config.js"
+          "postcss.config.js",
+          "package.json" -- Tailwind v4: looks for tailwindcss in dependencies
         )
         local root_dir = root_pattern(vim.api.nvim_buf_get_name(0))
         if root_dir then
@@ -120,10 +121,20 @@ function M.setup_lsp()
                 },
                 validate = true,
                 experimental = {
+                  configFile = nil, -- Tailwind v4: auto-detect CSS or JS config
                   classRegex = {
                     { "class[:]\\s*['\"]([^'\"]*)['\"]", "['\"]([^'\"]*)['\"]" },
                     { "class[:]\\s*{([^}]*)}", "['\"]([^'\"]*)['\"]" },
                     { "className[:]\\s*['\"]([^'\"]*)['\"]", "['\"]([^'\"]*)['\"]" },
+                  },
+                },
+                -- Tailwind v4: CSS file paths (LSP will auto-detect)
+                files = {
+                  exclude = {
+                    "**/.git/**",
+                    "**/node_modules/**",
+                    "**/.hg/**",
+                    "**/.svn/**",
                   },
                 },
               },
