@@ -1,0 +1,16 @@
+# Neovim
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Lua
+luac.out
+
+# Testing
+test/
+tmp/
+

@@ -1,0 +1,137 @@
+*nvim-eta.txt*  Eta template support for Neovim
+
+==============================================================================
+CONTENTS                                                    *nvim-eta-contents*
+
+  1. Introduction .................... |nvim-eta-introduction|
+  2. Requirements .................... |nvim-eta-requirements|
+  3. Installation .................... |nvim-eta-installation|
+  4. Configuration ................... |nvim-eta-configuration|
+  5. Features ........................ |nvim-eta-features|
+  6. Commands ........................ |nvim-eta-commands|
+  7. LSP Support ..................... |nvim-eta-lsp|
+  8. Troubleshooting ................. |nvim-eta-troubleshooting|
+
+==============================================================================
+INTRODUCTION                                            *nvim-eta-introduction*
+
+nvim-eta provides comprehensive support for Eta (JavaScript templates) in
+Neovim. It includes syntax highlighting, Treesitter integration, LSP support,
+and auto-closing tags.
+
+Project homepage: https://github.com/yourusername/nvim-eta
+
+==============================================================================
+REQUIREMENTS                                            *nvim-eta-requirements*
+
+- Neovim >= 0.9.0
+- nvim-treesitter (optional, recommended)
+- nvim-ts-autotag (optional)
+- LSP servers (optional):
+  - vscode-html-language-server
+  - tailwindcss-language-server
+  - emmet-ls
+
+==============================================================================
+INSTALLATION                                            *nvim-eta-installation*
+
+Using lazy.nvim: >lua
+
+  return {
+    "yourusername/nvim-eta",
+    ft = "eta",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "windwp/nvim-ts-autotag",
+    },
+    config = function()
+      require("nvim-eta").setup()
+    end,
+  }
+<
+
+==============================================================================
+CONFIGURATION                                          *nvim-eta-configuration*
+
+Default configuration: >lua
+
+  require("nvim-eta").setup({
+    treesitter = true,  -- Enable Treesitter integration
+    lsp = {
+      html = true,         -- HTML Language Server
+      tailwindcss = true,  -- TailwindCSS IntelliSense
+      emmet = true,        -- Emmet abbreviations
+    },
+    autotag = true,  -- Auto-closing tags
+  })
+<
+
+Disable specific features: >lua
+
+  require("nvim-eta").setup({
+    lsp = {
+      tailwindcss = false,  -- Disable TailwindCSS LSP
+    },
+  })
+<
+
+==============================================================================
+FEATURES                                                    *nvim-eta-features*
+
+- Automatic filetype detection for .eta files
+- Syntax highlighting for Eta template tags:
+  - <% %>   : Code execution
+  - <%= %>  : Escaped output
+  - <%~ %>  : Raw output
+  - <%# %>  : Comments
+  - <%_ %>  : Raw output without trimming
+- Treesitter integration with language injection
+- LSP support for HTML, TailwindCSS, and Emmet
+- Auto-closing tags
+
+==============================================================================
+COMMANDS                                                    *nvim-eta-commands*
+
+No specific commands. The plugin works automatically when editing .eta files.
+
+Check filetype: >vim
+  :set filetype?
+<
+Should show: html.eta
+
+==============================================================================
+LSP SUPPORT                                                      *nvim-eta-lsp*
+
+The plugin automatically attaches LSP servers to .eta files:
+
+HTML Language Server~
+  Provides HTML tag completion and validation.
+
+TailwindCSS Language Server~
+  Provides IntelliSense for Tailwind CSS classes.
+  Only activates if tailwind.config.js/ts exists.
+
+Emmet Language Server~
+  Provides abbreviation expansion (e.g., div.container>ul>li*3).
+
+==============================================================================
+TROUBLESHOOTING                                      *nvim-eta-troubleshooting*
+
+Syntax highlighting not working~
+  - Check filetype: :set filetype?
+  - Should be: html.eta
+  - Verify plugin loaded: :lua print(vim.g.loaded_nvim_eta)
+
+LSP not starting~
+  - Check LSP servers installed:
+    - :!which vscode-html-language-server
+    - :!which tailwindcss-language-server
+  - View LSP logs: :LspLog
+
+Treesitter issues~
+  - Install HTML parser: :TSInstall html
+  - Check registration: :lua print(vim.treesitter.language.get_lang("eta"))
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
+
